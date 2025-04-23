@@ -1,20 +1,14 @@
 # OMP_NUM_THREADS=1 torchrun --nproc_per_node=4 visualize_pytorch_dtensor_sharding_like_jax.py
+import contextlib
 import importlib.util
 import os
+
+import numpy as np
 import torch
 import torch.distributed as dist
-import contextlib
-from torch._prims_common import ShapeType
-import numpy as np
+import torch.distributed.elastic.multiprocessing.errors
 import torch.distributed.tensor as dt
-from tabulate import tabulate
-import rich.align
-import rich.console
-import rich.box
-import rich.padding
-import rich.style
-import rich.table
-import matplotlib
+from torch._prims_common import ShapeType
 
 Color = tuple[float, float, float] | str
 
@@ -66,9 +60,9 @@ def _shard_info(
         if isinstance(placement, dt.Shard):
             shard_dim = placement.dim
             local_offset = [0] * len(global_shape)
-            assert shard_dim < len(local_shape), (
-                f"Sharding dim {shard_dim} greater than tensor ndim {len(local_shape)}"
-            )
+            assert shard_dim < len(
+                local_shape
+            ), f"Sharding dim {shard_dim} greater than tensor ndim {len(local_shape)}"
             shard_size, shard_offset = placement._local_shard_size_on_dim(
                 local_shape[shard_dim], mesh_dim_size, coord[idx], return_offset=True
             )
@@ -96,6 +90,8 @@ def _create_table(shards: list[tuple[tuple[int, ...], tuple[int, ...], int]]):
     """
     Creates a tabulate table given row and column ranges with device name
     """
+    from tabulate import tabulate
+
     # Extract unique row and column ranges
     row_ranges = sorted({block[0] for block in shards})
     col_ranges = sorted({block[1] for block in shards})
@@ -148,6 +144,14 @@ def _create_rich_table(
     min_width: int = 9,
     max_width: int = 80,
 ):
+    import matplotlib
+    import rich.align
+    import rich.box
+    import rich.console
+    import rich.padding
+    import rich.style
+    import rich.table
+
     dtensor_height = shape[0] if len(shape) > 0 else 1
     dtensor_width = shape[1] if len(shape) > 0 else shape[0]
 
@@ -221,7 +225,15 @@ def _create_rich_table(
     console.print(table, end="\n\n")
 
 
-def visualize_sharding(dtensor, header=""):
+def _has_rich_and_matplotlib() -> bool:
+    return importlib.util.find_spec("rich") and importlib.util.find_spec("matplotlib")
+
+
+def _has_tabulate() -> bool:
+    return importlib.util.find_spec("tabulate")
+
+
+def visualize_sharding(dtensor, header="", use_rich: bool = False):
     """Visualizes sharding in the terminal for :class:`DTensor` that are 1D or 2D."""
     if dtensor.numel() == 0:  # Do not print empty dtensors.
         return
@@ -254,11 +266,16 @@ def visualize_sharding(dtensor, header=""):
         for device_index in device_coords  # [rows, cols, dev_id]
     ]
 
-    print(header)
-    print(_create_table(shards))
-    _create_rich_table(dtensor.shape, shards, device_kind=dtensor.device_mesh.device_type)
+    if _has_rich_and_matplotlib() and use_rich:
+        _create_rich_table(dtensor.shape, shards, device_kind=dtensor.device_mesh.device_type)
+    elif _has_tabulate():
+        print(header)
+        print(_create_table(shards))
+    else:
+        raise ChildFailedError("`visualize_sharding` requires either `rich` or `tabulate`.")
 
 
+@torch.distributed.elastic.multiprocessing.errors.record
 def main(local_device):
     local_rank = local_device.index
     tensor = torch.ones((2, 2), device=local_device) * local_rank
