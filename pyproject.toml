@@ -1,3 +1,22 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "visualize_pytorch_dtensor_sharding_like_jax"
+version = "0.0.1"
+description = "Visualize PyTorch DTensor sharding like JAX"
+requires-python = ">=3.9"
+
+dependencies = [
+    "torch>=2.6",
+    "tabulate",
+    "types-tabulate",
+    "matplotlib",
+    "rich",
+]
+
+
 [tool.mypy]
 # strict = true # TODO(wyi): enable it ASAP.
 exclude =  ["experiments"]
