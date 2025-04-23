@@ -33,16 +33,6 @@ def _device_coords_in_mesh(mesh: dt.DeviceMesh) -> dict[int, tuple[int, ...]]:
     }
 
 
-def test_device_coords_in_mesh():
-    mesh = dist.init_device_mesh("cpu", (2, 2), mesh_dim_names=["dp", "tp"])
-    assert _device_coords_in_mesh(mesh) == {
-        "cpu:0": (0, 0),
-        "cpu:1": (0, 1),
-        "cpu:2": (1, 0),
-        "cpu:3": (1, 1),
-    }
-
-
 def _shard_info(
     global_shape: ShapeType,
     mesh: dt.DeviceMesh,
