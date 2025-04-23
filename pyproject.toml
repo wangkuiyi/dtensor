@@ -1,0 +1,14 @@
+[tool.mypy]
+# strict = true # TODO(wyi): enable it ASAP.
+exclude =  ["experiments"]
+ignore_missing_imports = true	# https://stackoverflow.com/a/57815124/724872
+disallow_subclassing_any = false # https://stackoverflow.com/a/49990980/724872
+warn_return_any = false # Mypy is not smart enough to tell `a + b` is torch.Tensor if a is.
+# disallow_untyped_defs = true Enable it after we fix all the defs, or leave it here.
+check_untyped_defs = true
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
