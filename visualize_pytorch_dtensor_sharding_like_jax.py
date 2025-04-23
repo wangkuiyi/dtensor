@@ -1,4 +1,4 @@
-# OMP_NUM_THREADS=1 torchrun --nproc_per_node=4 a.py
+# OMP_NUM_THREADS=1 torchrun --nproc_per_node=4 visualize_pytorch_dtensor_sharding_like_jax.py
 import importlib.util
 import os
 import torch
@@ -253,7 +253,6 @@ def visualize_sharding(dtensor, header=""):
         )
         for device_index in device_coords  # [rows, cols, dev_id]
     ]
-    print(shards)
 
     print(header)
     print(_create_table(shards))
