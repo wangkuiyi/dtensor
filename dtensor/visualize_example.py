@@ -1,4 +1,4 @@
-# OMP_NUM_THREADS=1 torchrun --nproc_per_node=4 dtensor.visualize.sharding_example.py
+# OMP_NUM_THREADS=1 torchrun --nproc_per_node=4 dtensor/visualize_example.py
 import contextlib
 import importlib.util
 import os
