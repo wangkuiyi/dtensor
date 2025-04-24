@@ -6,7 +6,18 @@ build-backend = "flit_core.buildapi"
 name = "dtensor"
 version = "0.0.1"
 description = "Facilities built around PyTorch DTensor"
+readme = "README.md"
 requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Yi Wang", email = "yi.wang.2005@gmail.com"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+]
 
 dependencies = [
     "torch>=2.6",
@@ -16,6 +27,9 @@ dependencies = [
     "rich",
 ]
 
+[project.urls]
+"Homepage" = "https://github.com/wangkuiyi/dtensor"
+"Bug Tracker" = "https://github.com/wangkuiyi/dtensor/issues"
 
 [tool.mypy]
 # strict = true # TODO(wyi): enable it ASAP.
