@@ -3,9 +3,9 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "visualize_dtensor"
+name = "dtensor"
 version = "0.0.1"
-description = "Visualize PyTorch DTensor sharding like JAX"
+description = "Facilities built around PyTorch DTensor"
 requires-python = ">=3.9"
 
 dependencies = [
