@@ -1,4 +1,4 @@
-# OMP_NUM_THREADS=1 torchrun --nproc_per_node=4 visualize_sharding_example.py
+# OMP_NUM_THREADS=1 torchrun --nproc_per_node=4 dtensor.visualize.sharding_example.py
 import contextlib
 import importlib.util
 import os
@@ -10,7 +10,7 @@ import torch.distributed.elastic.multiprocessing.errors
 import torch.distributed.tensor as dt
 from torch._prims_common import ShapeType
 
-from visualize_dtensor import visualize_sharding
+import dtensor.visualize
 
 
 @contextlib.contextmanager
@@ -33,41 +33,59 @@ def main(local_device):
 
     # Case 1: 1D mesh
     mesh = dist.init_device_mesh("cpu", (4,), mesh_dim_names=["dp"])
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Replicate()]))
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Replicate()]), use_rich=True)
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0)]))
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0)]), use_rich=True)
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1)]))
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1)]), use_rich=True)
+    dtensor.visualize.sharding(dt.DTensor.from_local(tensor, mesh, [dt.Replicate()]))
+    dtensor.visualize.sharding(dt.DTensor.from_local(tensor, mesh, [dt.Replicate()]), use_rich=True)
+    dtensor.visualize.sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0)]))
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0)]), use_rich=True
+    )
+    dtensor.visualize.sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1)]))
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1)]), use_rich=True
+    )
 
     # Case 2: 2D mesh
     mesh = dist.init_device_mesh("cpu", (2, 2), mesh_dim_names=["dp", "tp"])
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Replicate()]))
-    visualize_sharding(
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Replicate()])
+    )
+    dtensor.visualize.sharding(
         dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Replicate()]), use_rich=True
     )
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0), dt.Replicate()]))
-    visualize_sharding(
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0), dt.Replicate()])
+    )
+    dtensor.visualize.sharding(
         dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0), dt.Replicate()]), use_rich=True
     )
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Shard(dim=1)]))
-    visualize_sharding(
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Shard(dim=1)])
+    )
+    dtensor.visualize.sharding(
         dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Shard(dim=1)]), use_rich=True
     )
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1), dt.Replicate()]))
-    visualize_sharding(
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1), dt.Replicate()])
+    )
+    dtensor.visualize.sharding(
         dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1), dt.Replicate()]), use_rich=True
     )
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Shard(dim=0)]))
-    visualize_sharding(
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Shard(dim=0)])
+    )
+    dtensor.visualize.sharding(
         dt.DTensor.from_local(tensor, mesh, [dt.Replicate(), dt.Shard(dim=0)]), use_rich=True
     )
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0), dt.Shard(dim=1)]))
-    visualize_sharding(
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0), dt.Shard(dim=1)])
+    )
+    dtensor.visualize.sharding(
         dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=0), dt.Shard(dim=1)]), use_rich=True
     )
-    visualize_sharding(dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1), dt.Shard(dim=0)]))
-    visualize_sharding(
+    dtensor.visualize.sharding(
+        dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1), dt.Shard(dim=0)])
+    )
+    dtensor.visualize.sharding(
         dt.DTensor.from_local(tensor, mesh, [dt.Shard(dim=1), dt.Shard(dim=0)]), use_rich=True
     )
 

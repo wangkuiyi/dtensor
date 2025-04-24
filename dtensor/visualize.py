@@ -209,7 +209,7 @@ def _has_tabulate() -> bool:
     return importlib.util.find_spec("tabulate")
 
 
-def visualize_sharding(dtensor, header="", use_rich: bool = False):
+def sharding(dtensor, header="", use_rich: bool = False):
     """Visualizes sharding in the terminal for :class:`DTensor` that are 1D or 2D."""
     if dtensor.numel() == 0:  # Do not print empty dtensors.
         return
