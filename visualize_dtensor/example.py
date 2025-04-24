@@ -10,7 +10,7 @@ import torch.distributed.elastic.multiprocessing.errors
 import torch.distributed.tensor as dt
 from torch._prims_common import ShapeType
 
-from _visualize_sharding import visualize_sharding
+from visualize_dtensor import visualize_sharding
 
 
 @contextlib.contextmanager
